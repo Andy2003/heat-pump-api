@@ -1,0 +1,55 @@
+asyncapi: "1.2.0"
+info:
+  title: HeatPump
+  version: "0.1.0"
+  description: |
+    This API defines a general protocol for communication with a heat pump.
+baseTopic: 'heatpump.{id}'
+
+servers:
+- url: broker:1883
+  description: Allows you to connect using the MQTT protocol.
+  scheme: mqtt
+
+topics:
+  operating_mode:
+    publish:
+      $ref: "#/components/messages/operatingMode"
+  operating_mode.update:
+    subscribe:
+      $ref: "#/components/messages/operatingMode"
+  hotwater.set_temperature.comfort.update:
+    subscribe:
+      description: the set temperature for hot water to use in comfort mode
+      $ref: "#/components/messages/temperature"
+  hotwater.set_temperature.standby.update:
+    subscribe:
+      description: the set temperature for hot water to use in standby mode
+      $ref: "#/components/messages/temperature"
+  hotwater.set_temperature:
+    publish:
+      description: the current configured set temperature for hot water
+      $ref: "#/components/messages/temperature"
+  hotwater.temperature:
+    publish:
+      description: the current hot water temperature
+      $ref: "#/components/messages/temperature"
+
+components:
+  messages:
+    operatingMode:
+      summary: The opearting mode
+      payload:
+        title: Operating mode
+        type: string
+        enum:
+        - AUTO
+        - COMFORT
+        - STANDBY
+        - ECONOMY
+        - BUILDING_PROTECTION
+    temperature:
+      payload:
+        title: Temperature in °C
+        type: number
+        format: float
