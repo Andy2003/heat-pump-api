@@ -6,7 +6,7 @@ This project aims to provide a uniform abstraction layer for heat pumps.
 API-Definition
 ---
 
-In the file heatpump_api.yaml is an AsyncAPI description, which can be edited by [AsyncAPI Editor](http://editor.asyncapi.org/).
+In the file [heatpump_api.yaml](heatpump_api.yaml) is an AsyncAPI description, which can be edited by [AsyncAPI Editor](http://editor.asyncapi.org/).
 It defines the endpoints to communicate with the heat pump.
 
 Implementation
