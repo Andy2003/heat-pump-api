@@ -12,7 +12,7 @@ It defines the endpoints to communicate with the heat pump.
 Implementation
 ---
 
-The script heat-pump.py is the 1st draft to implement the API for accessing my heat pump `WPL-10 AC` manufactured by Stiebel Eltron.
+The script [heat-pump.py](heat-pump.py) is the 1st draft to implement the API for accessing my heat pump `WPL-10 AC` manufactured by Stiebel Eltron.
 The measured values are published by the script via mqtt.
 
 The protocol was taken from [juerg5524.ch](http://juerg5524.ch/list_data.php). The [ElsterTable](doc/ElsterTable.inc) 
