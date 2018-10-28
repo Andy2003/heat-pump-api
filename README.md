@@ -18,17 +18,17 @@ The measured values are published by the script via mqtt.
 The protocol was taken from [juerg5524.ch](http://juerg5524.ch/list_data.php). The [ElsterTable](doc/ElsterTable.inc) 
 is the base for [the mapping file](stiebel-eltron.csv) of this project.
 
-Devices
+Devices:
 
-    | ID | Type |
-    | --- | ---- |
-    | 180 | Boiler |
-    | 480 | Manager |
-    | 500 | Heating-unit |
-    | 580 | Bus-coupler |
-    | 680 | PC (ComfortSoft) |
-    | 700 | Fremdgerät |
-    | 780 | DCF-Modul |
+| ID | Type |
+| --- | ---- |
+| 180 | Boiler |
+| 480 | Manager |
+| 500 | Heating-unit |
+| 580 | Bus-coupler |
+| 680 | PC (ComfortSoft) |
+| 700 | Fremdgerät |
+| 780 | DCF-Modul |
     
     
 Disclaimer
