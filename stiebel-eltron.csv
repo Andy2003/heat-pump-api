@@ -1,3 +1,6 @@
-Topic,Receiver,id,Typ,Unit
-hotwater/set_temperature,0x180,0x0003,/10,°C
-hotwater/temperature,0x180,0x000e,/10,°C
+PublishingTopic,SubscribtionTopic,Receiver,Id,Typ,Unit
+hotwater/set_temperature,,0x180,0x0003,/10,°C
+hotwater/set_temperature/comfort,hotwater/set_temperature/comfort/update,0x180,0x0013,/10,°C
+hotwater/set_temperature/standby,hotwater/set_temperature/standby/update,0x180,0x0a06,/10,°C
+hotwater/temperature,,0x180,0x000e,/10,°C
+operating_mode,operating_mode/update,0x180,0x0112,operatingMode,""

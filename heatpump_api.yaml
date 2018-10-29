@@ -18,9 +18,17 @@ topics:
   operating_mode.update:
     subscribe:
       $ref: "#/components/messages/operatingMode"
+  hotwater.set_temperature.comfort:
+    publish:
+      description: the set temperature for hot water to use in comfort mode
+      $ref: "#/components/messages/temperature"
   hotwater.set_temperature.comfort.update:
     subscribe:
       description: the set temperature for hot water to use in comfort mode
+      $ref: "#/components/messages/temperature"
+  hotwater.set_temperature.standby:
+    pubblish:
+      description: the set temperature for hot water to use in standby mode
       $ref: "#/components/messages/temperature"
   hotwater.set_temperature.standby.update:
     subscribe:
@@ -48,6 +56,7 @@ components:
         - STANDBY
         - ECONOMY
         - BUILDING_PROTECTION
+        - HOT_WATER
     temperature:
       payload:
         title: Temperature in °C
