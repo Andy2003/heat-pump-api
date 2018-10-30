@@ -6,17 +6,18 @@ This project aims to provide a uniform abstraction layer for heat pumps.
 API-Definition
 ---
 
-In the file [heatpump_api.yaml](heatpump_api.yaml) is an AsyncAPI description, which can be edited by [AsyncAPI Editor](http://editor.asyncapi.org/).
+In the file [heatpump_api.yaml](api/heatpump_api.yaml) is an AsyncAPI description, which can be edited by 
+[AsyncAPI Editor](http://editor.asyncapi.org/).
 It defines the endpoints to communicate with the heat pump.
 
 Implementation
 ---
 
-The script [heat-pump.py](heat-pump.py) is the 1st draft to implement the API for accessing my heat pump `WPL-10 AC` manufactured by Stiebel Eltron.
-The measured values are published by the script via mqtt.
+The script [heat-pump.py](collector/heat-pump.py) is the 1st draft to implement the API for accessing my heat pump 
+`WPL-10 AC` manufactured by Stiebel Eltron. The measured values are published by the script via mqtt.
 
 The protocol was taken from [juerg5524.ch](http://juerg5524.ch/list_data.php). The [ElsterTable](doc/ElsterTable.inc) 
-is the base for [the mapping file](stiebel-eltron.csv) of this project.
+is the base for [the mapping file](collector/stiebel-eltron.csv) of this project.
 
 Devices:
 
