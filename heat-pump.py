@@ -3,8 +3,8 @@
 from sys import argv
 from time import sleep
 
-from can import Notifier, Bus as CanBus
-from paho.mqtt.client import Client as MqttClient
+from can import Notifier, Bus as CanBus, Message
+from paho.mqtt.client import Client as MqttClient, MQTTMessage
 
 from elster.ElsterFrame import ElsterFrame
 from elster.ElsterTable import ElsterTable
@@ -23,6 +23,8 @@ mqttc = MqttClient()
 
 
 def canListener(msg):
+    # type: (Message) -> None
+
     frame = ElsterFrame(msg=msg)
     if frame.receiver != SENDER:
         # only parse messages directly send to us
@@ -39,6 +41,7 @@ def canListener(msg):
 
 # noinspection PyUnusedLocal
 def mqttListener(client, userdata, msg):
+    # type: (MqttClient, object, MQTTMessage) -> None
     topic = str(msg.topic)
     if not str.startswith(topic, BASE_TOPIC):
         return

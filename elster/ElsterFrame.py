@@ -1,7 +1,7 @@
 from can import Message
 
 
-class ElsterFrame:
+class ElsterFrame(object):
     WRITE = 0x0
     READ = 0x1
     RESPONSE = 0x2
@@ -12,6 +12,14 @@ class ElsterFrame:
     SYSTEM_RESPONSE = 0x7
     WRITE_LARGE = 0x20
     READ_LARGE = 0x21
+
+    __slots__ = (
+        "sender",
+        "receiver",
+        "type",
+        "elster_index",
+        "value"
+    )
 
     def __init__(self, receiver=None, elster_index=None, message_type=None, value=None, sender=0x680, msg=None, ):
         """

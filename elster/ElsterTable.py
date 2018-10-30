@@ -40,7 +40,16 @@ class ElsterTable:
             return self.subscription_topics[subscription_topic]
 
 
-class Entry:
+class Entry(object):
+    __slots__ = (
+        "publishingTopic",
+        "subscriptionTopic",
+        "receiver",
+        "id",
+        "type",
+        "unit",
+    )
+
     def __init__(self, row):
         """
 
