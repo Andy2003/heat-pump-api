@@ -62,7 +62,7 @@ class Entry(object):
         self.type = row[4]
         self.unit = row[5]
 
-    def extractMqttValue(self, value):
+    def extractApiValue(self, value):
         if value is None or value == 0x8000:
             return
         if self.type == '/10':
