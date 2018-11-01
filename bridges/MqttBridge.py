@@ -17,8 +17,8 @@ class MqttBridge(BaseBridge):
         self.client.connect(host)
         self.client.loop_start()
 
-    def publish(self, topic, value):
-        self.client.publish(topic, value)
+    def publish(self, heat_pump_id, base_topic, topic, value):
+        self.client.publish(base_topic + topic, value)
 
     # noinspection PyUnusedLocal
     def on_connect(self, client, userdata, flags, rc):
@@ -33,7 +33,7 @@ class MqttBridge(BaseBridge):
     def listener(self, client, userdata, msg):
         # type: (MqttBridge, MqttClient, object, MQTTMessage) -> None
         topic = str(msg.topic)
-        self.binding.on_message(topic, msg.payload)
+        self.binding.on_api_message(topic, msg.payload)
 
     def close(self):
         self.client.disconnect()

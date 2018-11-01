@@ -17,11 +17,11 @@ The script [ElsterBinding.py](bindings/ElsterBinding.py) is the 1st draft to imp
 `WPL-10 AC` manufactured by Stiebel Eltron. The measured values are published by the [MqttBridge.py](bridges/MqttBridge.py).
 
 The protocol was taken from [juerg5524.ch](http://juerg5524.ch/list_data.php). The [ElsterTable](doc/ElsterTable.inc) 
-is the base for [the mapping file](bindings/stiebel-eltron.csv) of this project.
+is the base for [the mapping](bindings/elster/ElsterTable.py) of this project.
 
 Devices:
 
-| ID | Type |
+| CAN-ID | Device |
 | --- | ---- |
 | 180 | Boiler |
 | 480 | Manager |

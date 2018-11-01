@@ -3,6 +3,6 @@ class BaseBridge(object):
         self.binding = binding
         binding.add_bridge(self)
 
-    def publish(self, topic, value):
-        # type: (str, object) -> None
+    def publish(self, id, base_topic, topic, value):
+        # type: (str, str, str, object) -> None
         pass
