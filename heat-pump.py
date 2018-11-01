@@ -1,21 +1,23 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import sys
 from time import sleep
 
-from bindings.ElsterBinding import ElsterBinding
+import config
+from bindings.elster.ElsterBinding import ElsterBinding
+from bridges.InfluxDBBridge import InfluxDBBridge
 from bridges.MqttBridge import MqttBridge
 
-MQTT_HOST = sys.argv[1]
-INFLUX_DB_URL = sys.argv[2]
-
-binding = ElsterBinding('wpl_10_ac')
-# InfluxDBBridge(INFLUX_DB_URL, 'heatpump', binding)
-bridge = MqttBridge(MQTT_HOST, binding)
+binding = ElsterBinding(config.BINDING['heat_pump_id'])
 
 try:
+    if config.INFLUXDB['enabled']:
+        binding.addBridge(InfluxDBBridge())
+    if config.MQTT['enabled']:
+        binding.addBridge(MqttBridge())
+
+    binding.start()
     while 1:
         binding.queryForData()
-        sleep(30)
+        sleep(config.BINDING['update_interval'])
 finally:
-    bridge.close()
+    binding.stop()

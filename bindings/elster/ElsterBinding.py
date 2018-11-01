@@ -10,7 +10,6 @@ from bindings.BaseBinding import BaseBinding
 from bindings.elster.Converter import OPERATING_MODE, DEC
 from bindings.elster.ElsterFrame import ElsterFrame
 from bindings.elster.Entry import SimpleEntry, ReadOnlyFormulaEntry, BaseEntry
-from bridges.BaseBridge import BaseBridge
 
 
 class ElsterBinding(BaseBinding):
@@ -60,7 +59,6 @@ class ElsterBinding(BaseBinding):
     def __init__(self, heat_pump_id):
         topics = []
         self.base_topic = 'heatpump/' + heat_pump_id + '/'
-        self.bridges = []  # type: List[BaseBridge]
         self.ids_per_receiver = {}  # type: Dict[int, Set[int]]
 
         for receiver, entries in self.ENTRIES.items():
@@ -77,9 +75,6 @@ class ElsterBinding(BaseBinding):
         # noinspection PyTypeChecker
         self.bus = can.Bus(bustype='socketcan_native', channel='can0', receive_own_messages=False)
         can.Notifier(self.bus, [self.onCanMessage])
-
-    def addBridge(self, bridge):
-        self.bridges.append(bridge)
 
     def onApiMessage(self, topic, payload):
         # type: (str, object) -> None

@@ -1,21 +1,16 @@
 from paho.mqtt.client import Client as MqttClient, MQTTMessage
 
-from bindings.BaseBinding import BaseBinding
+import config
 from bridges.BaseBridge import BaseBridge
 
 
 class MqttBridge(BaseBridge):
 
-    def __init__(self, host, binding):
-        # type: (str, BaseBinding) -> None
-        super(MqttBridge, self).__init__(binding)
-
-        print "mqtt connect to:", host
+    def __init__(self):
+        super(MqttBridge, self).__init__()
         self.client = MqttClient()
         self.client.on_message = self.onMqttMessage
         self.client.on_connect = self.onConnect
-        self.client.connect(host)
-        self.client.loop_start()
 
     def publishApiMessage(self, heat_pump_id, base_topic, topic, value):
         self.client.publish(base_topic + topic, value)
@@ -37,6 +32,11 @@ class MqttBridge(BaseBridge):
         topic = str(msg.topic)
         self.binding.onApiMessage(topic, msg.payload)
 
-    def close(self):
+    def start(self):
+        print "mqtt connect to:", config.MQTT['host']
+        self.client.connect(config.MQTT['host'])
+        self.client.loop_start()
+
+    def stop(self):
         self.client.disconnect()
         self.client.loop_stop()
