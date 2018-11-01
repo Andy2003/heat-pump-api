@@ -9,10 +9,10 @@ class BaseBinding(object):
         self.heat_pump_id = heat_pump_id
         self.topics = topics
 
-    def on_api_message(self, topic, payload):
+    def onApiMessage(self, topic, payload):
         # type: (str, object) -> None
         pass
 
-    def add_bridge(self, bridge):
+    def addBridge(self, bridge):
         # type: (BaseBridge) -> None
         pass

@@ -12,28 +12,30 @@ class MqttBridge(BaseBridge):
 
         print "mqtt connect to:", host
         self.client = MqttClient()
-        self.client.on_message = self.listener
-        self.client.on_connect = self.on_connect
+        self.client.on_message = self.onMqttMessage
+        self.client.on_connect = self.onConnect
         self.client.connect(host)
         self.client.loop_start()
 
-    def publish(self, heat_pump_id, base_topic, topic, value):
+    def publishApiMessage(self, heat_pump_id, base_topic, topic, value):
         self.client.publish(base_topic + topic, value)
 
     # noinspection PyUnusedLocal
-    def on_connect(self, client, userdata, flags, rc):
+    def onConnect(self, client, userdata, flags, rc):
         # type: (MqttBridge, MqttClient, object, dict, object) -> None
         topics = []
         for topic in self.binding.topics:
             topics.append((topic, 0))
+        if len(topics) == 0:
+            return
         print "mqtt subscribing to topics: ", topics
         client.subscribe(topics)
 
     # noinspection PyUnusedLocal
-    def listener(self, client, userdata, msg):
+    def onMqttMessage(self, client, userdata, msg):
         # type: (MqttBridge, MqttClient, object, MQTTMessage) -> None
         topic = str(msg.topic)
-        self.binding.on_api_message(topic, msg.payload)
+        self.binding.onApiMessage(topic, msg.payload)
 
     def close(self):
         self.client.disconnect()

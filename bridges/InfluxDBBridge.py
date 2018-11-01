@@ -20,7 +20,7 @@ class InfluxDBBridge(BaseBridge):
         if resp.status_code != 200:
             raise Exception('Cannot connect to influxdb: ' + base_url + ' -> ' + str(resp.status_code))
 
-    def publish(self, heat_pump_id, base_topic, topic, value):
+    def publishApiMessage(self, heat_pump_id, base_topic, topic, value):
         key = base_topic + topic
         if key in self.values:
             written_data = self.values[key]

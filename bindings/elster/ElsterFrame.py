@@ -22,15 +22,7 @@ class ElsterFrame(object):
     )
 
     def __init__(self, receiver=None, elster_index=None, message_type=None, value=None, sender=0x680, msg=None, ):
-        """
-
-        :type receiver: int
-        :type elster_index: int
-        :type message_type: int
-        :type value: int
-        :type sender: int
-        :type msg: Message
-        """
+        # type: (int, int, int, int, int, Message) -> None
         if msg is not None:
             self.readCanMessage(msg)
         else:
@@ -41,10 +33,7 @@ class ElsterFrame(object):
             self.value = value
 
     def readCanMessage(self, msg):
-        """
-
-        :type msg: Message
-        """
+        # type: (Message) -> None
         self.sender = msg.arbitration_id
         data = msg.data
         self.receiver = (data[0] & 0xf0) * 8 + (data[1] & 0x0f)
