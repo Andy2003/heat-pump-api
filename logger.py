@@ -8,6 +8,7 @@ from bindings.elster.ElsterFrame import ElsterFrame
 
 
 def on_can_message(msg):
+    # type: (can.Message) -> None
     frame = ElsterFrame(msg=msg)
     print frame
 

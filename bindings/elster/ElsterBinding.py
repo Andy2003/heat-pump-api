@@ -6,10 +6,11 @@ from can import Message
 from typing import Dict, List
 from typing import Set
 
+import config
 from bindings.BaseBinding import BaseBinding
-from bindings.elster.Converter import OPERATING_MODE, DEC
+from bindings.elster.Converter import DEC, CENT, OPERATING_MODE
 from bindings.elster.ElsterFrame import ElsterFrame
-from bindings.elster.Entry import SimpleEntry, ReadOnlyFormulaEntry, BaseEntry
+from bindings.elster.Entry import SimpleEntry, BaseEntry, ReadOnlyFormulaEntry
 
 
 class ElsterBinding(BaseBinding):
@@ -22,36 +23,63 @@ class ElsterBinding(BaseBinding):
     ENTRIES = {
         # Boiler
         0x180: [
-            SimpleEntry('hotwater/set_temperature', '°C', 0x0003, DEC),
-            SimpleEntry('hotwater/set_temperature/comfort', '°C', 0x0013, DEC, True),
-            SimpleEntry('hotwater/set_temperature/standby', '°C', 0x0a06, DEC, True),
-            SimpleEntry('hotwater/temperature', '°C', 0x000e, DEC),
+            SimpleEntry('boiler/hotwater/set_temperature', '°C', 0x0003, DEC),
+            SimpleEntry('boiler/hotwater/set_temperature/comfort', '°C', 0x0013, DEC, True),
+            SimpleEntry('boiler/hotwater/set_temperature/standby', '°C', 0x0a06, DEC, True),
+            SimpleEntry('boiler/hotwater/temperature', '°C', 0x000e, DEC),
             SimpleEntry('operating_mode', '', 0x0112, OPERATING_MODE, True),
-            SimpleEntry('temperature/outside', '°C', 0x000c, DEC),
+
+            SimpleEntry('outside/environment/temperature', '°C', 0x000c, DEC),
+
+            # Heizkreis-Isttemperatur Heizkreis 1
+            SimpleEntry('heating_circuit1/heating/temperature', '°C', 0x02ca, DEC),
+            # Heizkreis-Solltemperatur Heizkreis 1 (HK1) bei Festwertregelung wird Festwerttemperatur angezeigt.
+            SimpleEntry('heating_circuit1/heating/set_temperature', '°C', 0x01d7, DEC),
+            # Nachheizstufen-Vorlauf-Isttemperatur
+            SimpleEntry('booster/flow_temperature', '°C', 0x06a0, DEC),
+            # RÜCKLAUFISTTEMPERATUR WP
+            SimpleEntry('heatpump/heating/return_temperature', '°C', 0x0016, DEC),
+            # Pufferspeicher-Isttemperatur
+            SimpleEntry('buffer/heating/temperature', '°C', 0x0078, DEC),
+            # Pufferspeicher-Solltemperatur
+            SimpleEntry('buffer/heating/set_temperature', '°C', 0x01d5, DEC),
+            # HEIZUNGSDRUCK
+            SimpleEntry('heating/pressure', 'bar', 0x0674, CENT),
+            # VOLUMENSTROM
+            # SimpleEntry('heating/volumetric_flow_rate', 'l/min', 0x0673, CENT),
+            # SimpleEntry('system/hotwater/volumetric_flow_rate', 'l/min', 0x0673, CENT),
+            # ANLAGENFROST
+            # SimpleEntry('system/freeze_temperature', '°C', 0x0a00, DEC),
+
+            SimpleEntry('heatpump/heating/bivalence_temperatur', '°C', 0x01ac, DEC),
+            SimpleEntry('heatpump/heating/limit_of_use_temperatur', '°C', 0x01ae, DEC),
+
+            SimpleEntry('heatpump/hotwater/bivalence_temperatur', '°C', 0x01ad, DEC),
+            SimpleEntry('heatpump/hotwater/limit_of_use_temperatur', '°C', 0x01af, DEC),
         ],
         # heating unit
         0x500: [
-            SimpleEntry('temperature/inverter_environment', '°C', 0x000c, DEC),
+            SimpleEntry('inverter/environment/temperature', '°C', 0x000c, DEC),
 
             # VD Heizen
-            ReadOnlyFormulaEntry('heating/heat_output/day', 'Wh', 'A * 1000 + B', {'A': 0x092f, 'B': 0x092e}),
-            ReadOnlyFormulaEntry('heating/heat_output', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x0931, 'B': 0x0930, 'C': 0x092f}),
+            ReadOnlyFormulaEntry('compressor/heating/heat_output/day', 'Wh', 'A * 1000 + B', {'A': 0x092f, 'B': 0x092e}),
+            ReadOnlyFormulaEntry('compressor/heating/heat_output', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x0931, 'B': 0x0930, 'C': 0x092f}),
 
-            ReadOnlyFormulaEntry('heating/energy_input/day', 'Wh', 'A * 1000 + B', {'A': 0x091f, 'B': 0x091e}),
-            ReadOnlyFormulaEntry('heating/energy_input', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x0921, 'B': 0x0920, 'C': 0x091f}),
+            ReadOnlyFormulaEntry('compressor/heating/energy_input/day', 'Wh', 'A * 1000 + B', {'A': 0x091f, 'B': 0x091e}),
+            ReadOnlyFormulaEntry('compressor/heating/energy_input', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x0921, 'B': 0x0920, 'C': 0x091f}),
 
             # NHZ Heizen
-            ReadOnlyFormulaEntry('heating/heat_output/emergency', 'Wh', 'A * 1000000 + B * 1000 + C', {'A': 0x0929, 'B': 0x0927, 'C': 0x0926}),
+            ReadOnlyFormulaEntry('booster/heating/heat_output', 'Wh', 'A * 1000000 + B * 1000 + C', {'A': 0x0929, 'B': 0x0927, 'C': 0x0926}),
 
             # VD Warmwasser
-            ReadOnlyFormulaEntry('hotwater/heat_output/day', 'Wh', 'A * 1000 + B', {'A': 0x092b, 'B': 0x092a}),
-            ReadOnlyFormulaEntry('hotwater/heat_output', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x092d, 'B': 0x092c, 'C': 0x092b}),
+            ReadOnlyFormulaEntry('compressor/hotwater/heat_output/day', 'Wh', 'A * 1000 + B', {'A': 0x092b, 'B': 0x092a}),
+            ReadOnlyFormulaEntry('compressor/hotwater/heat_output', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x092d, 'B': 0x092c, 'C': 0x092b}),
 
-            ReadOnlyFormulaEntry('hotwater/energy_input/day', 'Wh', 'A * 1000 + B', {'A': 0x091b, 'B': 0x091a}),
-            ReadOnlyFormulaEntry('hotwater/energy_input', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x091d, 'B': 0x091c, 'C': 0x091b}),
+            ReadOnlyFormulaEntry('compressor/hotwater/energy_input/day', 'Wh', 'A * 1000 + B', {'A': 0x091b, 'B': 0x091a}),
+            ReadOnlyFormulaEntry('compressor/hotwater/energy_input', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x091d, 'B': 0x091c, 'C': 0x091b}),
 
             # NHZ Warmwasser
-            ReadOnlyFormulaEntry('hotwater/heat_output/emergency', 'Wh', 'A * 1000000 + B * 1000 + C', {'A': 0x0925, 'B': 0x0923, 'C': 0x0922}),
+            ReadOnlyFormulaEntry('booster/hotwater/heat_output', 'Wh', 'A * 1000000 + B * 1000 + C', {'A': 0x0925, 'B': 0x0923, 'C': 0x0922}),
         ]
 
     }  # type: Dict[int, List[BaseEntry]]
@@ -96,7 +124,7 @@ class ElsterBinding(BaseBinding):
     def onCanMessage(self, msg):
         # type: (Message) -> None
         frame = ElsterFrame(msg=msg)
-        if frame.receiver != ElsterBinding.SENDER:
+        if config.BINDING['handle_all_messages'] is False and frame.receiver != ElsterBinding.SENDER:
             # only parse messages directly send to us
             return
         if msg.arbitration_id not in self.ENTRIES:

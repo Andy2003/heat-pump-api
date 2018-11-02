@@ -48,3 +48,4 @@ class OperatingMode(Converter):
 
 OPERATING_MODE = OperatingMode()
 DEC = FactorConverter(0.1)
+CENT = FactorConverter(0.01)
