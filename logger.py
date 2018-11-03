@@ -10,7 +10,9 @@ from bindings.elster.ElsterFrame import ElsterFrame
 def on_can_message(msg):
     # type: (can.Message) -> None
     frame = ElsterFrame(msg=msg)
-    print frame
+    if msg.arbitration_id in (0x180, 0x500):
+        if frame.type == ElsterFrame.RESPONSE:
+            print frame
 
 
 # noinspection PyTypeChecker

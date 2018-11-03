@@ -20,66 +20,143 @@ class ElsterBinding(BaseBinding):
     # 780 - DCF-Modul
     SENDER = 0x680
 
+    #  Structure taken from "BEDIENUNG UND INSTALLATION Wärmepumpen-Manager WPM 3" Chapter 5
+    #  https://www.stiebel-eltron.de/toolbox/datengrab/montageanweisung/de/DM0000031125.pdf
     ENTRIES = {
         # Boiler
         0x180: [
-            SimpleEntry('boiler/hotwater/set_temperature', '°C', 0x0003, DEC),
-            SimpleEntry('boiler/hotwater/set_temperature/comfort', '°C', 0x0013, DEC, True),
-            SimpleEntry('boiler/hotwater/set_temperature/standby', '°C', 0x0a06, DEC, True),
-            SimpleEntry('boiler/hotwater/temperature', '°C', 0x000e, DEC),
-            SimpleEntry('operating_mode', '', 0x0112, OPERATING_MODE, True),
-
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # INFO / ANLAGE / HEIZUNG
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # AUSSENTEMPERATUR
             SimpleEntry('outside/environment/temperature', '°C', 0x000c, DEC),
-
-            # Heizkreis-Isttemperatur Heizkreis 1
+            # ISTTEMPERATUR HK 1 - Heizkreis-Isttemperatur Heizkreis 1
             SimpleEntry('heating_circuit1/heating/temperature', '°C', 0x02ca, DEC),
-            # Heizkreis-Solltemperatur Heizkreis 1 (HK1) bei Festwertregelung wird Festwerttemperatur angezeigt.
+            # SOLLTEMPERATUR HK 1 - Heizkreis-Solltemperatur Heizkreis 1 (HK1) bei Festwertregelung wird Festwerttemperatur angezeigt.
             SimpleEntry('heating_circuit1/heating/set_temperature', '°C', 0x01d7, DEC),
-            # Nachheizstufen-Vorlauf-Isttemperatur
+
+            # TODO
+            # ISTTEMPERATUR HK 2 - Heizkreis-Isttemperatur Heizkreis 2
+            # SOLLTEMPERATUR HK 2 - Heizkreis-Solltemperatur Heizkreis 2 (HK2) bei Festwertregelung wird Festwerttemperatur angezeigt.
+            # VORLAUFISTTEMPERATUR WP - Wärmepumpen-Vorlauf-Isttemperatur
+
+            # VORLAUFISTTEMPERATUR NHZ - Nachheizstufen-Vorlauf-Isttemperatur
             SimpleEntry('booster/flow_temperature', '°C', 0x06a0, DEC),
+
             # RÜCKLAUFISTTEMPERATUR WP
             SimpleEntry('heatpump/heating/return_temperature', '°C', 0x0016, DEC),
-            # Pufferspeicher-Isttemperatur
+
+            # TODO
+            # FESTWERTSOLLTEMPERATUR
+
+            # PUFFERISTTEMPERATUR - Pufferspeicher-Isttemperatur
             SimpleEntry('buffer/heating/temperature', '°C', 0x0078, DEC),
-            # Pufferspeicher-Solltemperatur
+            # PUFFERSOLLTEMPERATUR - Pufferspeicher-Solltemperatur
             SimpleEntry('buffer/heating/set_temperature', '°C', 0x01d5, DEC),
             # HEIZUNGSDRUCK
             SimpleEntry('heating/pressure', 'bar', 0x0674, CENT),
             # VOLUMENSTROM
-            # SimpleEntry('heating/volumetric_flow_rate', 'l/min', 0x0673, CENT),
-            # SimpleEntry('system/hotwater/volumetric_flow_rate', 'l/min', 0x0673, CENT),
+            SimpleEntry('system/hotwater/volumetric_flow_rate', 'l/min', 0x0673, CENT),
             # ANLAGENFROST
-            # SimpleEntry('system/freeze_temperature', '°C', 0x0a00, DEC),
+            SimpleEntry('system/freeze_temperature', '°C', 0x0a00, DEC),
 
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # INFO / ANLAGE / WARMWASSER
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ISTTEMPERATUR - Warmwasser-Isttemperatur
+            SimpleEntry('boiler/hotwater/temperature', '°C', 0x000e, DEC),
+            # SOLLTEMPERATUR - Warmwasser-Solltemperatur
+            SimpleEntry('boiler/hotwater/set_temperature', '°C', 0x0003, DEC),
+            # VOLUMENSTROM -  same as INFO / ANLAGE / HEIZUNG / VOLUMENSTROM
+            # SimpleEntry('heating/volumetric_flow_rate', 'l/min', 0x0673, CENT),
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # INFO / ANLAGE / ELEKTRISCHE NACHERWÄRMUNG
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # BIVALENZTEMPERATUR HZG - Bivalenzpunkt Heizung
             SimpleEntry('heatpump/heating/bivalence_temperatur', '°C', 0x01ac, DEC),
+            # EINSATZGRENZE HZG - Einsatzgrenze Heizung
             SimpleEntry('heatpump/heating/limit_of_use_temperatur', '°C', 0x01ae, DEC),
-
+            # BIVALENZTEMPERATUR WW - Bivalenzpunkt Warmwasser
             SimpleEntry('heatpump/hotwater/bivalence_temperatur', '°C', 0x01ad, DEC),
+            # EINSATZGRENZE WW - Einsatzgrenze Warmwasser
             SimpleEntry('heatpump/hotwater/limit_of_use_temperatur', '°C', 0x01af, DEC),
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            #  Not yet matched
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            SimpleEntry('boiler/hotwater/set_temperature/comfort', '°C', 0x0013, DEC, True),
+            SimpleEntry('boiler/hotwater/set_temperature/standby', '°C', 0x0a06, DEC, True),
+            SimpleEntry('operating_mode', '', 0x0112, OPERATING_MODE, True),
         ],
         # heating unit
         0x500: [
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # INFO / ANLAGE / PROZESSDATEN
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # RÜCKLAUFTEMPERATUR °C
+            # VORLAUFTEMPERATUR °C
+            # FROSTSCHUTZTEMPERATUR °C
+            # AUSSENTEMPERATUR °C
             SimpleEntry('inverter/environment/temperature', '°C', 0x000c, DEC),
+            # FORTLUFTTEMPERATUR °C
+            # VERDAMPFERTEMPERATUR °C
+            # REKUPERATORTEMPERATUR °C
+            # SAUGGASTEMP VERDICHTER °C
+            # SAUGGASTEMP ND VERDICHTER °C
+            # SAUGGASTEMP HD VERDICHTER °C
+            # ZWISCHENEINSPRITZUNGSTEMP °C
+            # HEISSGASTEMPERATUR °C
+            # VERFLÜSSIGERTEMPERATUR °C
+            # ÖLSUMPFTEMPERATUR °C
+            # DRUCK NIEDERDRUCK bar
+            # DRUCK MITTELDRUCK bar
+            # DRUCK HOCHDRUCK bar
+            # SPANNUNGSEINGANG DIFF DRUCK V
+            # DIFFERENZ DRUCK mbar
+            # WP WASSERVOLUMENSTROM l/min
+            # STROM INVERTER ND A
+            # STROM INVERTER HD A
+            # STROM INVERTER A
+            # SPANNUNG INVERTER V
+            # DREHZAHL ND Hz
+            # SOLLDREHZAHL ND Hz
+            # DREHZAHL HD Hz
+            # SOLLDREHZAHL HD Hz
+            # ISTDREHZAHL VERDICHTER Hz
+            # SOLLDREHZAHL VERDICHTER Hz
+            # LÜFTERLEISTUNG REL %
+            # ISTDREHZAHL LUEFTER Hz
+            # SOLLDREHZAHL LUEFTER Hz
+            # VERDAMPFEREINGANGSTEMPERATUR °C
 
-            # VD Heizen
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # INFO / ANLAGE / WÄRMEMENGE
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # VD HEIZEN TAG - Wärmemenge des Verdichters im Heizbetrieb seit 0:00 Uhr des aktuellen Tages.
             ReadOnlyFormulaEntry('compressor/heating/heat_output/day', 'Wh', 'A * 1000 + B', {'A': 0x092f, 'B': 0x092e}),
+            # VD HEIZEN SUMME - Gesamtsumme der Wärmemenge des Verdichters im Heizbetrieb.
             ReadOnlyFormulaEntry('compressor/heating/heat_output', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x0931, 'B': 0x0930, 'C': 0x092f}),
-
-            ReadOnlyFormulaEntry('compressor/heating/energy_input/day', 'Wh', 'A * 1000 + B', {'A': 0x091f, 'B': 0x091e}),
-            ReadOnlyFormulaEntry('compressor/heating/energy_input', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x0921, 'B': 0x0920, 'C': 0x091f}),
-
-            # NHZ Heizen
-            ReadOnlyFormulaEntry('booster/heating/heat_output', 'Wh', 'A * 1000000 + B * 1000 + C', {'A': 0x0929, 'B': 0x0927, 'C': 0x0926}),
-
-            # VD Warmwasser
+            # VD WARMWASSER TAG - Wärmemenge des Verdichters im Warmwasserbetrieb seit 0:00 Uhr des aktuellen Tages.
             ReadOnlyFormulaEntry('compressor/hotwater/heat_output/day', 'Wh', 'A * 1000 + B', {'A': 0x092b, 'B': 0x092a}),
+            # VD WARMWASSER SUMME - Gesamtsumme der Wärmemenge des Verdichters im Warmwasserbetrieb.
             ReadOnlyFormulaEntry('compressor/hotwater/heat_output', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x092d, 'B': 0x092c, 'C': 0x092b}),
-
-            ReadOnlyFormulaEntry('compressor/hotwater/energy_input/day', 'Wh', 'A * 1000 + B', {'A': 0x091b, 'B': 0x091a}),
-            ReadOnlyFormulaEntry('compressor/hotwater/energy_input', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x091d, 'B': 0x091c, 'C': 0x091b}),
-
-            # NHZ Warmwasser
+            # NHZ HEIZEN SUMME - Gesamtsumme der Wärmemenge der Nachheizstufen im Heizbetrieb.
+            ReadOnlyFormulaEntry('booster/heating/heat_output', 'Wh', 'A * 1000000 + B * 1000 + C', {'A': 0x0929, 'B': 0x0927, 'C': 0x0926}),
+            # NHZ WARMWASSER SUMME - Gesamtsumme der Wärmemenge der Nachheizstufen im Warmwasserbetrieb.
             ReadOnlyFormulaEntry('booster/hotwater/heat_output', 'Wh', 'A * 1000000 + B * 1000 + C', {'A': 0x0925, 'B': 0x0923, 'C': 0x0922}),
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # INFO / ANLAGE / LEISTUNGSAUFNAHME
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # VD HEIZEN TAG - Elektrische Leistung des Verdichters im Heizbetrieb seit 0:00 Uhr des aktuellen Tages.
+            ReadOnlyFormulaEntry('compressor/heating/energy_input/day', 'Wh', 'A * 1000 + B', {'A': 0x091f, 'B': 0x091e}),
+            # VD HEIZEN SUMME - Gesamtsumme der Elektrischen Leistung des Verdichters im Heizbetrieb.
+            ReadOnlyFormulaEntry('compressor/heating/energy_input', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x0921, 'B': 0x0920, 'C': 0x091f}),
+            # VD WARMWASSER TAG - Elektrische Leistung des Verdichters im Warmwasserbetrieb seit 0:00 Uhr des aktuellen Tages.
+            ReadOnlyFormulaEntry('compressor/hotwater/energy_input/day', 'Wh', 'A * 1000 + B', {'A': 0x091b, 'B': 0x091a}),
+            # VD WARMWASSER SUMME - Gesamtsumme der Elektrischen Leistung des Verdichters im Warmwasserbetrieb.
+            ReadOnlyFormulaEntry('compressor/hotwater/energy_input', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x091d, 'B': 0x091c, 'C': 0x091b}),
         ]
 
     }  # type: Dict[int, List[BaseEntry]]
