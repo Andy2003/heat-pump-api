@@ -8,7 +8,7 @@ from typing import Set
 
 import config
 from bindings.BaseBinding import BaseBinding
-from bindings.elster.Converter import DEC, CENT, OPERATING_MODE
+from bindings.elster.Converter import DEC, CENT, OPERATING_MODE, ONE
 from bindings.elster.ElsterFrame import ElsterFrame
 from bindings.elster.Entry import SimpleEntry, BaseEntry, ReadOnlyFormulaEntry
 
@@ -95,23 +95,44 @@ class ElsterBinding(BaseBinding):
             # INFO / ANLAGE / PROZESSDATEN
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # RÜCKLAUFTEMPERATUR °C
+            SimpleEntry('inverter/return_temperature', '°C', 0x0016, DEC),
             # VORLAUFTEMPERATUR °C
+            SimpleEntry('inverter/flow_temperature', '°C', 0x01d6, DEC),
             # FROSTSCHUTZTEMPERATUR °C
+            SimpleEntry('inverter/freeze_protection_temperature', '°C', 0x0014, DEC),
             # AUSSENTEMPERATUR °C
             SimpleEntry('inverter/environment/temperature', '°C', 0x000c, DEC),
+
+            # TODO
             # FORTLUFTTEMPERATUR °C
+
             # VERDAMPFERTEMPERATUR °C
-            # REKUPERATORTEMPERATUR °C
+            SimpleEntry('inverter/evaporator_temperature', '°C', 0x07a9, DEC),
+            # REKUPERATORTEMPERATUR (Wärmetauscher) °C
+            SimpleEntry('inverter/recuperator_temperature', '°C', 0x07a3, DEC),
+
+            # TODO
             # SAUGGASTEMP VERDICHTER °C
             # SAUGGASTEMP ND VERDICHTER °C
             # SAUGGASTEMP HD VERDICHTER °C
             # ZWISCHENEINSPRITZUNGSTEMP °C
+
             # HEISSGASTEMPERATUR °C
+            SimpleEntry('inverter/hot_gas_temperature', '°C', 0x0265, DEC),
+
+            # TODO
             # VERFLÜSSIGERTEMPERATUR °C
             # ÖLSUMPFTEMPERATUR °C
+
             # DRUCK NIEDERDRUCK bar
+            SimpleEntry('inverter/low_pressure', 'bar', 0x07a7, CENT),
+
+            # TODO
             # DRUCK MITTELDRUCK bar
             # DRUCK HOCHDRUCK bar
+            SimpleEntry('inverter/high_pressure', 'bar', 0x07a6, CENT),
+
+            # TODO
             # SPANNUNGSEINGANG DIFF DRUCK V
             # DIFFERENZ DRUCK mbar
             # WP WASSERVOLUMENSTROM l/min
@@ -130,6 +151,9 @@ class ElsterBinding(BaseBinding):
             # SOLLDREHZAHL LUEFTER Hz
             # VERDAMPFEREINGANGSTEMPERATUR °C
 
+        ],
+        # Verdichter ???
+        514: [
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # INFO / ANLAGE / WÄRMEMENGE
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -157,8 +181,53 @@ class ElsterBinding(BaseBinding):
             ReadOnlyFormulaEntry('compressor/hotwater/energy_input/day', 'Wh', 'A * 1000 + B', {'A': 0x091b, 'B': 0x091a}),
             # VD WARMWASSER SUMME - Gesamtsumme der Elektrischen Leistung des Verdichters im Warmwasserbetrieb.
             ReadOnlyFormulaEntry('compressor/hotwater/energy_input', 'Wh', 'A * 1000000 + (B+C) * 1000', {'A': 0x091d, 'B': 0x091c, 'C': 0x091b}),
-        ]
 
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # INFO / ANLAGE / LAUFZEITEN
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # VD HEIZEN - Laufzeit des Verdichters im Heizbetrieb. Stunden
+            SimpleEntry('compressor/heating/operating_hours', 'h', 0x07fc, ONE),
+
+            # TODO
+            # VD 1 HEIZEN - Laufzeit des Verdichters 1 im Heizbetrieb. Stunden
+            # VD 2 HEIZEN - Laufzeit des Verdichters 2 im Heizbetrieb. Stunden
+            # VD 1/2 HEIZEN - Laufzeit des Verdichters 1 und 2 im Heizbetrieb. Stunden
+
+            # VD WARMWASSER - Laufzeit des Verdichters im Warmwasserbetrieb. Stunden
+            SimpleEntry('compressor/hotwater/operating_hours', 'h', 0x0802, ONE),
+
+            # TODO
+            # VD 1 WARMWASSER - Laufzeit des Verdichters 1 im Warmwasserbetrieb. Stunden
+            # VD 2 WARMWASSER - Laufzeit des Verdichters 2 im Warmwasserbetrieb. Stunden
+            # VD 1/2 WARMWASSER - Laufzeit des Verdichters 1 und 2 im Warmwasserbetrieb. Stunden
+            # VD KÜHLEN - Laufzeit des Verdichters im Kühlbetrieb. Stunden
+            # VD ABTAUEN - Laufzeit des Verdichters im Abtaubetrieb. Stunden
+            SimpleEntry('compressor/unfreeze/operating_hours', 'h', 0x0808, ONE),
+
+            # TODO
+            # VD 1 ABTAUEN - Laufzeit des Verdichters 1 im Abtaubetrieb.  Stunden
+            # VD 2 ABTAUEN - Laufzeit des Verdichters 2 im Abtaubetrieb. Stunden
+
+            # NHZ 1 - Laufzeit der elektrischen Not-/Zusatzheizung in der Nachheizstufe 1. Stunden
+            SimpleEntry('booster/operating_hours/level1', 'h', 0x0259, ONE),
+            # NHZ 2 - Laufzeit der elektrischen Not-/Zusatzheizung in der Nachheizstufe 2. Stunden
+            SimpleEntry('booster/operating_hours/level2', 'h', 0x025a, ONE),
+            # NHZ 1 / 2 -  Laufzeit der elektrischen Not-/Zusatzheizung in den Nachheizstufen 1 und 2. Stunden
+            SimpleEntry('booster/operating_hours', 'h', 0x0805, ONE),
+            # ZEIT ABTAUEN Minuten
+            SimpleEntry('compressor/unfreeze/operating_minutes', 'min', 0x0807, ONE),
+            # STARTS ABTAUEN
+            SimpleEntry('compressor/unfreeze/starts', '', 0x0806, ONE),
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # INFO / ANLAGE / STARTS
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # VERDICHTER
+            ReadOnlyFormulaEntry('compressor/starts', '', 'A * 1000 + B', {'A': 0x071c, 'B': 0x071d}),
+            # TODO
+            # VERDICHTER 1
+            # VERDICHTER 2
+        ]
     }  # type: Dict[int, List[BaseEntry]]
 
     def __init__(self, heat_pump_id):
